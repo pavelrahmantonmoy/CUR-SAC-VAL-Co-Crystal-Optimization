@@ -11,8 +11,8 @@ This repository contains the complete computational workflow, data pipelines, ma
 
 ---
 
-## 📌 Abstract Overview
-Formulation of Sacubitril/Valsartan (SAC/VAL) multi-component solids poses structural and thermodynamic stability challenges. This study implements an integrated 4-stage *in silico* AI-QbD framework to design and predict the manufacturing design space for a novel Nutra-Pharma ternary co-crystal involving Curcumin (CUR), Sacubitril, and Valsartan. 
+## Abstract Overview
+Formulation of Sacubitril/Valsartan (SAC/VAL) multi-component solids poses structural and thermodynamic stability challenges. This study implements an integrated 4-stage *in silico* AI-QbD framework to design and predict the manufacturing design space for a novel Nutra-Pharma ternary co-crystal involving Curcumin (CUR), Sacubitril and Valsartan. 
 
 The computational pipeline couples:
 1. **Hansen Solubility Parameter (HSP)** thermodynamic screening.
@@ -22,7 +22,7 @@ The computational pipeline couples:
 
 ---
 
-## 🛠️ Repository Structure
+## Repository Structure
 
 ```text
 .

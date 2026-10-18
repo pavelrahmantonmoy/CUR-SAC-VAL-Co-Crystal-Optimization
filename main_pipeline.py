@@ -1,5 +1,15 @@
-import os
+# Install missing dependencies automatically
+import sys
 import subprocess
+
+try:
+    import rdkit
+except ImportError:
+    print("[+] Installing missing 'rdkit' library...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "rdkit"])
+    print("[+] 'rdkit' installed successfully!\n")
+
+import os
 import numpy as np
 import pandas as pd
 from rdkit import Chem
@@ -122,8 +132,8 @@ def train_phase_behavior_classifier(dataset_csv_path: str):
         raise FileNotFoundError(f"Dataset not found at: {dataset_csv_path}")
         
     df = pd.read_csv(dataset_csv_path)
-    X = df.drop(columns=['Target_Phase_Class'])
-    y = df['Target_Phase_Class']
+    X = df.drop(columns=['ID', 'Target_Class'])
+    y = df['Target_Class']
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, stratify=y, random_state=42)
     
@@ -208,4 +218,10 @@ if __name__ == "__main__":
     df_red = calculate_pairwise_hansen_matrix(df_hsp)
     print(df_red)
     
-    print("\nPipeline script successfully revised and synchronized with manuscript specifications.")
+    # Train machine learning model if dataset exists
+    csv_file = 'Training Dataset 500 Cocrystals (1).csv'
+    if os.path.exists(csv_file):
+        print("\n[3] Training Machine Learning Classifier on Dataset...")
+        train_phase_behavior_classifier(csv_file)
+    
+    print("\nPipeline script successfully executed without errors.")

@@ -94,7 +94,7 @@ def calculate_pairwise_hansen_matrix(df_hsp: pd.DataFrame, R0: float = 7.0) -> p
 
 
 # ==============================================================================
-# MODULE 2: AutoDock Vina Automation Script
+# MODULE 2: AutoDock Vina Automation & Qualitative Affinity Integration
 # ==============================================================================
 def run_autodock_vina_automation(receptor_pdbqt: str, ligand_pdbqt: str, output_dir: str, center: list, size: list, exhaustiveness: int = 32):
     """
@@ -118,6 +118,19 @@ def run_autodock_vina_automation(receptor_pdbqt: str, ligand_pdbqt: str, output_
     print(f"[+] Executing Vina Docking for {ligand_pdbqt}...")
     subprocess.run(cmd, check=True)
     print(f"[+] Docking completed. Results saved to {out_pdbqt}")
+
+def evaluate_docking_stability_proxy(binding_affinity_kcal_mol: float) -> dict:
+    """
+    Evaluates AutoDock Vina binding energy strictly as a qualitative thermodynamic 
+    stability proxy, avoiding unphysical direct derivation of kinetic transport constants (D_eff).
+    """
+    is_thermodynamically_favorable = binding_affinity_kcal_mol < -5.0
+    
+    return {
+        'Binding_Affinity_kcal_mol': binding_affinity_kcal_mol,
+        'Thermodynamic_Stability_Proxy': 'Favorable Complexation' if is_thermodynamically_favorable else 'Unfavorable',
+        'Role': 'Qualitative supporting evidence for non-covalent interactions'
+    }
 
 
 # ==============================================================================
@@ -218,10 +231,14 @@ if __name__ == "__main__":
     df_red = calculate_pairwise_hansen_matrix(df_hsp)
     print(df_red)
     
+    print("\n[3] Qualitative Docking Thermodynamic Evaluation...")
+    docking_summary = evaluate_docking_stability_proxy(-6.4)
+    print(f"Binding Score: {docking_summary['Binding_Affinity_kcal_mol']} kcal/mol | Proxy Status: {docking_summary['Thermodynamic_Stability_Proxy']}")
+    
     # Train machine learning model if dataset exists
     csv_file = 'Training Dataset 500 Cocrystals (1).csv'
     if os.path.exists(csv_file):
-        print("\n[3] Training Machine Learning Classifier on Dataset...")
+        print("\n[4] Training Machine Learning Classifier on Dataset...")
         train_phase_behavior_classifier(csv_file)
     
-    print("\nPipeline script successfully executed without errors.")
+    print("\nPipeline script
